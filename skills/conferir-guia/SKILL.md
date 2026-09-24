@@ -45,8 +45,13 @@ Motivo: <o que o motor encontrou, em uma frase por problema>
 O que corrigir: <a ação, por problema>
 Quem corrige: <Recepção | Financeiro | Profissional que atendeu>
 Prazo de envio ao convênio: <data_limite_envio, se veio>
+Avisos (não impedem o envio): <só se houver achados com severidade AVISO; uma linha curta cada>
 <Se você assumiu algo ao montar a guia (ex.: ano da data), diga aqui.>
 ```
+
+Motivo e O que corrigir listam só achados com severidade PENDENTE ou REVISAR. Achado com severidade
+AVISO não é problema: vai apenas na linha de avisos (ou some, se não houver nenhum). Se o status for OK,
+diga que pode seguir para o convênio.
 
 ## Regras que você não quebra
 
