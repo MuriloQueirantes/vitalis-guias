@@ -129,3 +129,12 @@ def test_descricao_abreviada_nao_e_erro_mas_descricao_de_outro_procedimento_e():
     assert "DESCRICAO_DIVERGENTE" not in {a.codigo for a in abreviada.problemas}
     trocada = verificar_guia(dict(base, procedimento_descricao="Consulta ortopédica"), REGRAS)
     assert "DESCRICAO_DIVERGENTE" in {a.codigo for a in trocada.problemas}
+
+
+def test_pagar_do_bolso_e_particular():
+    # Padrão ensinado depois que a frase caiu em REVISAR no teste da Skill.
+    g = dict(next(x for x in GUIAS if x["id_guia"] == "G-2608-0003"), id_guia="G-NOVA", paciente="P-9999",
+             observacao_recepcao="Paciente disse que vai pagar do bolso dessa vez")
+    d = verificar_guia(g, REGRAS)
+    assert d.status == "PENDENTE"
+    assert {a.codigo for a in d.problemas} == {"FATURAR_PARTICULAR"}

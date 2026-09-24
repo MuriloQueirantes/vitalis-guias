@@ -171,6 +171,7 @@ Depois é só colar a guia: "confere essa guia: G-2609-0107 Norte 18/09 P-1026 p
 4. **Na dúvida, não assume.** Observação que o motor não reconhece e casos fora da regra (reavaliação fisioterapêutica lançada com CRM, procedimento real que não está na tabela) vão para REVISAR, não para OK nem para PENDENTE.
 5. **A autorização verbal da Saúde Interior não é "campo faltando".** Com protocolo e dentro de 5 dias úteis, é PENDENTE com data-limite para lançar o número. Sem protocolo, é campo obrigatório faltando.
 6. **Duplicidade: a primeira guia lançada é a original.** Só a segunda é barrada. Senão as duas deixariam de ser enviadas e o atendimento não seria cobrado.
+7. **O motor aprende com o que cai em REVISAR.** No teste da Skill, a frase "paciente disse que vai pagar do bolso" caiu em REVISAR, porque o motor não conhecia essa expressão. Era o comportamento certo. Confirmado que significa particular, eu mesmo acrescentei o padrão `do bolso` em `vitalis/observacao.py` e escrevi o teste. O ciclo é esse: REVISAR → uma pessoa confirma → vira regra com teste.
 
 **O que ficou de fora e por quê**
 - **Integração real com o sistema de gestão.** Não temos acesso à API dele. Em produção, a entrada seria um gatilho (webhook ou uma leitura a cada X minutos) chamando a mesma função que hoje atende `POST /api/verificar`.
@@ -186,7 +187,7 @@ Depois é só colar a guia: "confere essa guia: G-2609-0107 Norte 18/09 P-1026 p
 - Testei o MCP pelo protocolo de verdade (`scripts/testar_mcp.py`) e depois o painel publicado, com uma chamada em cada rota.
 - Testei a Skill de ponta a ponta no Claude Code, colando guias no formato de WhatsApp. Esse teste achou um falso positivo: a descrição abreviada ("fisio musculoesquelética") era acusada como erro. Corrigi: agora só é problema quando a descrição aponta para **outro** procedimento da tabela.
 
-**Dúvidas que eu levaria para a clínica (WhatsApp)**
+**Dúvidas em aberto: como interpretei (e o que eu confirmaria com a clínica)**
 - G-0045 e G-0074: quem fez a "reavaliação fisioterapêutica" lançada com o Dr. Otávio (CRM)? Era para ser consulta ou reavaliação com fisioterapeuta?
 - G-0034: o convênio vincula a autorização à data agendada, ou só a validade conta?
 - Os 5 dias úteis da autorização verbal contam do atendimento ou do protocolo?

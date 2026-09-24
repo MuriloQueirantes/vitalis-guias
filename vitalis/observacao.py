@@ -20,7 +20,7 @@ from .dados import sem_acento
 
 # Ordem importa: a primeira categoria que casar vence.
 PADROES: list[tuple[str, list[str]]] = [
-    ("FATURAR_PARTICULAR", [r"particular", r"nao quer usar o convenio", r"sem convenio"]),
+    ("FATURAR_PARTICULAR", [r"particular", r"nao quer usar o convenio", r"sem convenio", r"do bolso"]),
     ("CODIGO_DIVERGENTE", [r"procedimento realizado foi", r"codigo certo", r"codigo errado", r"lancar o codigo"]),
     ("AUTORIZACAO_VERBAL", [r"por telefone", r"verbal", r"protocolo"]),
     ("AUTORIZACAO_NOVA_NAO_LANCADA", [r"autorizacao nova", r"nova autorizacao", r"numero ainda nao lancado"]),
