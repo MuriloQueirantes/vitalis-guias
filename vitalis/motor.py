@@ -217,12 +217,13 @@ def verificar_guia(guia: dict, regras: dict, base: list[dict] | None = None, hoj
                 f"'{proc['descricao']}' exige registro {esperado}, mas o profissional lançado tem '{g.get('profissional_registro')}'.",
                 "Confirmar quem fez o atendimento e se o procedimento lançado é o correto.", CLINICO)
 
-    if conv:
+    # Guia que vai virar particular não será enviada ao convênio: as regras dele não se aplicam.
+    if conv and obs.categoria != "FATURAR_PARTICULAR":
         nome = conv["nome"]
 
         # procedimento coberto (a observação do convênio só entra quando fala de cobertura)
         nota_cobertura = f" {conv['observacao']}" if "cobre" in sem_acento(conv.get("observacao", "")) else ""
-        if proc and obs.categoria != "FATURAR_PARTICULAR" and proc["codigo"] not in conv["procedimentos_cobertos"]:
+        if proc and proc["codigo"] not in conv["procedimentos_cobertos"]:
             add("NAO_COBERTO", "PENDENTE",
                 f"{nome} não cobre '{proc['descricao']}' ({proc['codigo']}).{nota_cobertura}",
                 "Não enviar ao convênio: faturar como particular ou confirmar o procedimento correto.", FINANCEIRO)

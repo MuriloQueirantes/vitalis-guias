@@ -138,3 +138,9 @@ def test_pagar_do_bolso_e_particular():
     d = verificar_guia(g, REGRAS)
     assert d.status == "PENDENTE"
     assert {a.codigo for a in d.problemas} == {"FATURAR_PARTICULAR"}
+
+
+def test_particular_nao_cobra_regras_do_convenio():
+    d = verificar_guia({"convenio": "Vitalcard", "procedimento_codigo": "50000560", "data_atendimento": "2026-09-22",
+                        "observacao_recepcao": "paciente vai pagar do bolso"}, REGRAS)
+    assert {a.codigo for a in d.problemas} == {"FATURAR_PARTICULAR"}
