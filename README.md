@@ -108,7 +108,7 @@ Requer Python 3.11+ e [uv](https://docs.astral.sh/uv/).
 ```bash
 uv sync
 uv run uvicorn app:app --reload        # painel em http://localhost:8000
-uv run pytest -q                       # 95 testes
+uv run pytest -q                       # 98 testes
 ```
 
 ## MCP: instalação
@@ -182,8 +182,9 @@ Depois é só colar a guia: "confere essa guia: G-2609-0107 Norte 18/09 P-1026 p
 **Como testei**
 - Conferi as 80 guias à mão contra `regras_convenio.json` e escrevi o gabarito de cada uma em `tests/test_motor.py`. O motor bate com o gabarito nas 80.
 - Criei casos de guia nova que tentam quebrar a conferência: guia vazia, data "ontem", valor "abc", convênio sem acento, observação desconhecida, prazo de envio vencido, autorização verbal fora dos 5 dias úteis, duplicata de guia de agosto.
-- Testei as rotas do painel e da API (inclusive JSON inválido e CSV vazio) e as ferramentas do MCP. São 95 testes: `uv run pytest -q`.
+- Testei as rotas do painel e da API (inclusive JSON inválido e CSV vazio) e as ferramentas do MCP. São 98 testes: `uv run pytest -q`.
 - Testei o MCP pelo protocolo de verdade (`scripts/testar_mcp.py`) e depois o painel publicado, com uma chamada em cada rota.
+- Testei a Skill de ponta a ponta no Claude Code, colando guias no formato de WhatsApp. Esse teste achou um falso positivo: a descrição abreviada ("fisio musculoesquelética") era acusada como erro. Corrigi: agora só é problema quando a descrição aponta para **outro** procedimento da tabela.
 
 **Dúvidas que eu levaria para a clínica (WhatsApp)**
 - G-0045 e G-0074: quem fez a "reavaliação fisioterapêutica" lançada com o Dr. Otávio (CRM)? Era para ser consulta ou reavaliação com fisioterapeuta?

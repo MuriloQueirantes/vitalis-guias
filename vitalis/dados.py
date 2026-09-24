@@ -38,7 +38,11 @@ def ler_csv(texto: str) -> list[dict]:
     primeira = texto.splitlines()[0] if texto.strip() else ""
     sep = ";" if primeira.count(";") > primeira.count(",") else ","
     leitor = csv.DictReader(io.StringIO(texto), delimiter=sep)
-    return [{(k or "").strip(): (v or "").strip() for k, v in linha.items()} for linha in leitor]
+    # Coluna sem cabeçalho (valor a mais na linha) vem com chave None: é ignorada, não derruba a leitura.
+    return [
+        {k.strip(): (v or "").strip() for k, v in linha.items() if k is not None and isinstance(v, (str, type(None)))}
+        for linha in leitor
+    ]
 
 
 def carregar_guias(caminho: Path = ARQ_GUIAS) -> list[dict]:

@@ -120,3 +120,12 @@ def test_observacao_desconhecida_vai_pra_humano():
     g = dict(next(x for x in GUIAS if x["id_guia"] == "G-2608-0003"), id_guia="G-NOVA",
              observacao_recepcao="Paciente disse que o plano foi cancelado mês passado.")
     assert verificar_guia(g, REGRAS).status == "REVISAR"
+
+
+def test_descricao_abreviada_nao_e_erro_mas_descricao_de_outro_procedimento_e():
+    base = dict(next(x for x in GUIAS if x["id_guia"] == "G-2608-0003"), id_guia="G-NOVA", paciente="P-9999")
+    base["procedimento_codigo"] = "50000470"
+    abreviada = verificar_guia(dict(base, procedimento_descricao="fisioterapia musculoesquelética"), REGRAS)
+    assert "DESCRICAO_DIVERGENTE" not in {a.codigo for a in abreviada.problemas}
+    trocada = verificar_guia(dict(base, procedimento_descricao="Consulta ortopédica"), REGRAS)
+    assert "DESCRICAO_DIVERGENTE" in {a.codigo for a in trocada.problemas}

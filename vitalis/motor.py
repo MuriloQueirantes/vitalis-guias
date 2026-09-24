@@ -183,10 +183,21 @@ def verificar_guia(guia: dict, regras: dict, base: list[dict] | None = None, hoj
     if proc:
         cod = proc["codigo"]
         desc = g.get("procedimento_descricao", "")
-        if desc and sem_acento(desc) != sem_acento(proc["descricao"]):
-            add("DESCRICAO_DIVERGENTE", "PENDENTE",
-                f"Código {cod} é '{proc['descricao']}', mas a descrição lançada é '{desc}'.",
-                "Confirmar qual procedimento foi feito e corrigir código ou descrição.", RECEPCAO)
+        # Descrição abreviada ("fisio musculoesquelética") não é erro. Só é problema quando a
+        # descrição aponta para OUTRO procedimento da tabela (código diz uma coisa, texto diz outra).
+        d_norm, p_norm = sem_acento(desc), sem_acento(proc["descricao"])
+        if desc and d_norm not in p_norm and p_norm not in d_norm:
+            outro = next((p for p in regras["procedimentos"] if p["codigo"] != cod and
+                          (d_norm in sem_acento(p["descricao"]) or sem_acento(p["descricao"]) in d_norm)), None)
+            if outro:
+                add("DESCRICAO_DIVERGENTE", "PENDENTE",
+                    f"Código {cod} é '{proc['descricao']}', mas a descrição lançada é '{desc}' "
+                    f"(que corresponde ao código {outro['codigo']}).",
+                    "Confirmar qual procedimento foi feito e corrigir código ou descrição.", RECEPCAO)
+            else:
+                add("DESCRICAO_DIVERGENTE", "AVISO",
+                    f"Descrição lançada ('{desc}') diferente da tabela ('{proc['descricao']}'); vale o código {cod}.",
+                    "Padronizar a descrição.", RECEPCAO)
         if valor is None and g.get("valor"):
             add("VALOR_DIVERGENTE", "PENDENTE", f"Valor ilegível: '{g.get('valor')}'.",
                 f"Lançar o valor de tabela (R$ {proc['valor_referencia']:.2f}).", RECEPCAO)

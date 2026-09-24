@@ -162,6 +162,9 @@ async def lote(texto: str = Form(""), arquivo: UploadFile | None = File(None)):
         return pagina("Erro", f"<h1>Não consegui ler o CSV</h1><p>{e(str(exc))}</p>")
     if not guias:
         return pagina("Erro", "<h1>Nenhuma guia encontrada</h1><p>Confira se o CSV tem cabeçalho.</p>")
+    if not any(c in COLUNAS for c in guias[0]):
+        return pagina("Erro", "<h1>Cabeçalho não reconhecido</h1><p>A primeira linha do CSV precisa ter os nomes "
+                      f"das colunas do sistema: {e(', '.join(COLUNAS))}.</p>")
     decisoes = verificar_lote(guias, REGRAS)
     linhas = "".join(linha_decisao(d, g) for d, g in zip(decisoes, guias))
     rel = markdown.markdown(relatorio_markdown(decisoes, titulo="lote enviado", guias_mes=0), extensions=["tables"])
